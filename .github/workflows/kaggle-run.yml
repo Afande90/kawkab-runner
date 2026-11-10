@@ -1,0 +1,56 @@
+# Push a kernel from kernels/<name>/ to Kaggle (private, free GPU), wait for it, and commit its output to results/<name>/.
+name: Kaggle run
+on:
+  push:
+    branches: [main]
+    paths: ["kernels/**"]
+  workflow_dispatch:
+    inputs:
+      kernel: { description: "kernel folder name", required: true }
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+      - name: Which kernels changed
+        id: k
+        run: |
+          if [ -n "${{ github.event.inputs.kernel }}" ]; then echo "list=${{ github.event.inputs.kernel }}" >> $GITHUB_OUTPUT; exit 0; fi
+          echo "list=$(git diff --name-only HEAD~1 HEAD -- kernels | cut -d/ -f2 | sort -u | tr '\n' ' ')" >> $GITHUB_OUTPUT
+      - name: Kaggle credentials
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        run: |
+          pip install -q -U kaggle
+          mkdir -p ~/.kaggle
+          python -c "import json,os; json.dump({'username':os.environ['KAGGLE_USERNAME'],'key':os.environ['KAGGLE_API_TOKEN']}, open(os.path.expanduser('~/.kaggle/kaggle.json'),'w'))"
+          chmod 600 ~/.kaggle/kaggle.json
+          kaggle --version
+      - name: Push, wait, fetch
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        run: |
+          for k in ${{ steps.k.outputs.list }}; do
+            d=kernels/$k; [ -f $d/kernel-metadata.json ] || continue
+            sed -i "s/KAGGLE_USER/$KAGGLE_USERNAME/" $d/kernel-metadata.json
+            slug=$KAGGLE_USERNAME/$(python -c "import json;print(json.load(open('$d/kernel-metadata.json'))['id'].split('/')[1])")
+            kaggle kernels push -p $d
+            for i in $(seq 280); do
+              s=$(kaggle kernels status $slug 2>&1 | tail -1); echo "$i $s"
+              echo "$s" | grep -qiE "complete|error|cancel" && break
+              sleep 60
+            done
+            mkdir -p results/$k && kaggle kernels output $slug -p results/$k || true
+            git checkout -- $d/kernel-metadata.json
+          done
+      - name: Commit results
+        run: |
+          git config user.name "kaggle-run"; git config user.email "actions@users.noreply.github.com"
+          git add results || true
+          git diff --cached --quiet || (git commit -m "results: ${{ steps.k.outputs.list }}" && git pull --rebase origin main && git push)

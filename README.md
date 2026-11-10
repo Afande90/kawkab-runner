@@ -1,1 +1,2 @@
-# kawkab-runner
+# runner
+Temporary job runner.

@@ -1,0 +1,30 @@
+# Download a finished Kaggle kernel's output into results/<name>/ (trigger: add or change fetch/<name>).
+name: Kaggle fetch
+on:
+  push:
+    branches: [main]
+    paths: ["fetch/**"]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+      - name: Fetch
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        run: |
+          pip install -q -U kaggle
+          mkdir -p ~/.kaggle
+          python -c "import json,os; json.dump({'username':os.environ['KAGGLE_USERNAME'],'key':os.environ['KAGGLE_API_TOKEN']}, open(os.path.expanduser('~/.kaggle/kaggle.json'),'w'))"
+          chmod 600 ~/.kaggle/kaggle.json
+          for k in $(git diff --name-only HEAD~1 HEAD -- fetch | cut -d/ -f2 | sort -u); do
+            kaggle kernels status $KAGGLE_USERNAME/kawkab-$k
+            mkdir -p results/$k && kaggle kernels output $KAGGLE_USERNAME/kawkab-$k -p results/$k
+          done
+          git config user.name "kaggle-run"; git config user.email "actions@users.noreply.github.com"
+          git add results
+          git diff --cached --quiet || (git commit -m "results: fetched $(ls fetch | tr '\n' ' ')" && git pull --rebase origin main && git push)
