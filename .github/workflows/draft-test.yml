@@ -19,5 +19,5 @@ jobs:
           pip install -q transformers numpy requests
       - run: |
           for d in drafts/*/; do
-            echo "== $d"; (cd $d && KAWKAB_TEST=1 python run.py && python -c "import json;import glob;d=json.load(open(glob.glob('phase2*.json')[0]));print({k:(v.get('error') or round(v['eval_loss'],3)) for k,v in d['students'].items()})")
+            echo "== $d"; (cd $d && KAWKAB_TEST=1 python run.py && python -c "import json;import glob;d=json.load(open(glob.glob('phase*.json')[0]));print({k:(v.get('error') or round(v['eval_loss'],3)) for k,v in d['students'].items()})")
           done
