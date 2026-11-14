@@ -294,7 +294,7 @@ def train_student(name, train, teacher, Ut, cids_t, arm, seed, held):
                     with torch.no_grad():
                         src = teacher if arm == "F" else PEER["m"]
                         hs = src.gpt_neox(input_ids=x, use_cache=False).last_hidden_state[:, 8:]
-                        st = zrows(hs.float() @ src.embed_out.weight[cset_t].float().T)
+                        st = zrows(hs.float() @ src.get_output_embeddings().weight[cset_t].float().T)
                 elif arm == "S":
                     st = zrows(out.logits[:, 8:][..., cset_t].detach().float())
                 else:
