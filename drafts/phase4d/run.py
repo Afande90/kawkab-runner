@@ -501,15 +501,18 @@ def main():
     # Residual check (outside review 3): how much of the layer-8 J-lens content is NOT a linear function of the
     # teacher's final output? Final logits = W h_final, so a ridge from h_final spans everything the logits carry.
     ev = windows(held, 300 if not TEST else 8, start=EVAL_SEQS * SEQ + 400 * 64)
-    Hf, T = [], {l: [] for l in Ls}
+    Hf, T, Hearly = [], {l: [] for l in Ls}, []
     with torch.no_grad():
         for ids in ev:
             x = torch.tensor([ids], device=dev)
             hf = teacher.gpt_neox(input_ids=x, use_cache=False).last_hidden_state[0, 8:].float()
             Hf.append(hf)
+            Hearly.append(torch.cat([layer_output(teacher, x, 1)[0, 8:].float(), layer_output(teacher, x, 2)[0, 8:].float()], -1))
             for l in Ls:
                 T[l].append(layer_output(teacher, x, l)[0, 8:].float() @ U[l].T)
     Hf = torch.cat(Hf)
+    He = torch.cat(Hearly)
+    He = He - He[:int(0.8 * len(He))].mean(0)
     n_tr = int(0.8 * len(Hf))
     mu = Hf[:n_tr].mean(0)
     Hc = Hf - mu
@@ -566,7 +569,16 @@ def main():
         mlp.load_state_dict(best_state)
         with torch.no_grad():
             nl = unexpl(Y[n_tr:], mlp(Xn[n_tr:]))
-        report[str(l)] = {"linear_tuned_unexplained": tot, "best_lambda": best[0], "sweep_val": sweep,
+        # E-early: share of the (test-set) residual predictable from the teacher's layers 1-2 (ridge fit on train residuals)
+        Rtr = Y[:n_tr] - Hc[:n_tr] @ M
+        de = He.shape[1]
+        Ge = He[:n_tr].T @ He[:n_tr]
+        Me = torch.linalg.solve(Ge + 1e-2 * float(torch.trace(Ge)) / de * torch.eye(de, device=dev), He[:n_tr].T @ Rtr)
+        e_early = 1 - unexpl(R, He[n_tr:] @ Me)
+        # average of per-concept shares (scale-artefact check) and top-20 concepts by unexplained variance
+        top = (R ** 2).sum(0).sort(descending=True).indices[:20].cpu().tolist()
+        report[str(l)] = {"E_early": e_early, "per_concept_mean_share": float(per.mean()),
+                          "top20_concepts": [tok.decode([cids_t[i]]) for i in top] if not TEST else top,"linear_tuned_unexplained": tot, "best_lambda": best[0], "sweep_val": sweep,
                           "per_concept_median": float(per.median()), "per_concept_p90": float(per.quantile(0.9)),
                           "top10_concepts_share_of_residual": float((R ** 2).sum(0).sort(descending=True).values[:10].sum() / (R ** 2).sum()),
                           "mlp_unexplained": nl, "fair_zscored_unexplained": fair_z}
