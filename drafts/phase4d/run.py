@@ -573,7 +573,7 @@ def main():
         print("layer", l, report[str(l)], flush=True)
     OUT["residual_check_v2"] = report
     OUT["n_rows"] = int(len(Hf))
-    print("residual check", OUT["residual_check"], f"({time.time() - t0:.0f}s)", flush=True)
+    print("residual check v2 done", f"({time.time() - t0:.0f}s)", flush=True)
     save()
 
 if __name__ == "__main__":
