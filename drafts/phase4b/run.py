@@ -6,8 +6,7 @@
 #      example B into A; pass if the answer switches to B's answer in >70% of cases at the probe-best layer
 #   +  probe of the hop variable from the final logits (should be ~chance: the teacher never outputs the step)
 #   +  lens gate: do the 32 Jacobian-lens scores (and logit-lens scores) decode the hop variable?
-import json, math, os, random, time
-import numpy as np
+import json, os, random, time
 import torch
 import torch.nn.functional as F
 from transformers import GPTNeoXConfig, GPTNeoXForCausalLM
@@ -252,7 +251,12 @@ def main():
     ln = teacher.gpt_neox.final_layer_norm
     extra = {"jlens32": lambda Xf, l: Xf.to(dev) @ U[l].T if l in U else Xf.to(dev)[:, :32],
              "logitlens32": lambda Xf, l: ln(Xf.to(dev)).float() @ W.T}
-    extra = {n: (lambda f: (lambda Xf, l: f(Xf, l).cpu()))(f) for n, f in extra.items()}
+    def wrap(f):
+        def g(Xf, l):
+            with torch.no_grad():
+                return f(Xf, l).detach().cpu()
+        return g
+    extra = {n: wrap(f) for n, f in extra.items()}
     OUT["gateA_probe_k5"] = probe_grid(teacher, 5, 100, extra=extra); save()
     print("gate A", {k: v for k, v in OUT["gateA_probe_k5"].items()}, flush=True)
     OUT["gateB_shuffled_labels_k5"] = probe_grid(teacher, 5, 200, shuffle=True)
