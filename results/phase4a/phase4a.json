@@ -1,0 +1,45 @@
+{
+ "config": {
+  "teacher": "EleutherAI/pythia-1.4b",
+  "student_shape": "EleutherAI/pythia-70m",
+  "seq": 256,
+  "batch": 32,
+  "steps": 6000,
+  "lr": 0.001,
+  "t_layer": 8,
+  "s_layer": 2,
+  "lambda_j": 2.0,
+  "tau": 2.0
+ },
+ "students": {},
+ "concepts": 582,
+ "residual_check": {
+  "raw": {
+   "7": {
+    "unexplained_var": 0.2021448016166687,
+    "residual_corr_with_L8": 0.7067281603813171
+   },
+   "8": {
+    "unexplained_var": 0.32969599962234497
+   },
+   "9": {
+    "unexplained_var": 0.21692505478858948,
+    "residual_corr_with_L8": 0.8356003165245056
+   }
+  },
+  "zrows": {
+   "7": {
+    "unexplained_var": 0.8309404253959656,
+    "residual_corr_with_L8": 0.858024537563324
+   },
+   "8": {
+    "unexplained_var": 0.8141156435012817
+   },
+   "9": {
+    "unexplained_var": 0.7446576356887817,
+    "residual_corr_with_L8": 0.8722085356712341
+   }
+  }
+ },
+ "n_rows": 16800
+}
