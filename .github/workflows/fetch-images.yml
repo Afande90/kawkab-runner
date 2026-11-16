@@ -1,0 +1,43 @@
+name: Fetch images
+on:
+  push:
+    branches: [main]
+    paths: ["imgs/queries.txt"]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'P'
+          import json, urllib.parse, urllib.request, os, re
+          UA = {"User-Agent": "image-fetch/1.0 (personal recipe sheet)"}
+          out = []
+          os.makedirs("imgs/files", exist_ok=True)
+          for line in open("imgs/queries.txt"):
+              q = line.strip()
+              if not q: continue
+              url = ("https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrlimit=6"
+                     "&prop=imageinfo&iiprop=url|extmetadata|mime&iiurlwidth=700&format=json&gsrsearch=" + urllib.parse.quote(q))
+              data = json.load(urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30))
+              pages = sorted(data.get("query", {}).get("pages", {}).values(), key=lambda p: p.get("index", 99))
+              n = 0
+              for p in pages:
+                  ii = p.get("imageinfo", [{}])[0]
+                  if ii.get("mime") not in ("image/jpeg", "image/png"): continue
+                  meta = ii.get("extmetadata", {})
+                  g = lambda k: re.sub("<[^>]+>", "", meta.get(k, {}).get("value", ""))[:200]
+                  fn = re.sub(r"[^A-Za-z0-9]+", "_", q)[:30] + f"_{n}.jpg"
+                  req = urllib.request.Request(ii["thumburl"], headers=UA)
+                  open("imgs/files/" + fn, "wb").write(urllib.request.urlopen(req, timeout=30).read())
+                  out.append({"query": q, "file": fn, "title": p["title"], "artist": g("Artist"), "license": g("LicenseShortName"),
+                              "page": ii.get("descriptionurl")})
+                  n += 1
+                  if n == 3: break
+          json.dump(out, open("imgs/credits.json", "w"), indent=1)
+          P
+      - run: |
+          git config user.name "img-fetch"; git config user.email "actions@users.noreply.github.com"
+          git add imgs && git commit -m "images" && git pull --rebase origin main && git push
