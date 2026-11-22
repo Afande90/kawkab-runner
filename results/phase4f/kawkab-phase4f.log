@@ -1,0 +1,27 @@
+[{"stream_name":"stdout","time":112.339028104,"data":"pool (2000000, 51) (76s)\n"}
+,{"stream_name":"stdout","time":129.230538069,"data":"gates {'L2': {'d2': 0.963, 'd3': 0.243, 'd4': 0.237, 'all': 0.593, 'shuffled': 0.122, 'random_init': 0.514}, 'L5': {'d2': 1.0, 'd3': 0.936, 'd4': 0.418, 'all': 0.835, 'shuffled': 0.128, 'random_init': 0.505}, 'L7': {'d2': 1.0, 'd3': 0.995, 'd4': 0.957, 'all': 0.984, 'shuffled': 0.124, 'random_init': 0.521}, 'pass_A': True, 'pass_B': True}\n"}
+,{"stream_name":"stderr","time":133.231956482,"data":"/kaggle/src/script.py:313: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.\n"}
+,{"stream_name":"stderr","time":133.232001679,"data":"  scaler = torch.cuda.amp.GradScaler(enabled=dev == \"cuda\")\n"}
+,{"stream_name":"stdout","time":1400.563188004,"data":"pilot budget 20000 {'1': 0.2818, '2': 0.3178, '3': 0.3736, '4': 0.3894, '5': 0.4076, '6': 0.4514, '7': 0.4544} (1365s)\n"}
+,{"stream_name":"stderr","time":1535.532531456,"data":"/kaggle/src/script.py:357: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\n"}
+,{"stream_name":"stderr","time":1535.532586958,"data":"Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n"}
+,{"stream_name":"stderr","time":1535.532592287,"data":"  curve.append({\"step\": step + 1, \"stage\": Dd, \"acc\": acc, \"loss\": round(loss.item(), 4), \"aux\": round(float(aux), 4)})\n"}
+,{"stream_name":"stdout","time":9547.094221922,"data":"pilot W {'0.1': 0.464, '0.3': 0.7997, '1.0': 0.9885} (9511s)\n"}
+,{"stream_name":"stdout","time":13525.923457739,"data":"pilot O {'0.1': 0.4059, '0.3': 0.4026, '1.0': 0.4019} (13490s)\n"}
+,{"stream_name":"stdout","time":21319.12273722,"data":"pilot K {'0.1': 0.4042, '0.3': 0.4037, '1.0': 0.4026} (21283s)\n"}
+,{"stream_name":"stdout","time":22572.231224022,"data":"seed 1 A 0.3998 {'1': 0.2794, '2': 0.3306, '3': 0.3772, '4': 0.3876, '5': 0.412, '6': 0.454, '7': 0.4438} (22536s)\n"}
+,{"stream_name":"stdout","time":25167.398246986,"data":"seed 1 K 0.4017 {'1': 0.2816, '2': 0.3302, '3': 0.3782, '4': 0.3904, '5': 0.413, '6': 0.4564, '7': 0.449} (25131s)\n"}
+,{"stream_name":"stdout","time":27890.923934193,"data":"seed 1 W 0.9951 {'1': 0.9994, '2': 0.9998, '3': 0.9986, '4': 0.9976, '5': 0.9926, '6': 0.9416, '7': 0.8488} (27855s)\n"}
+,{"stream_name":"stdout","time":30613.419195145,"data":"seed 1 X 0.3956 {'1': 0.2802, '2': 0.3296, '3': 0.376, '4': 0.3852, '5': 0.406, '6': 0.4594, '7': 0.4472} (30577s)\n"}
+,{"stream_name":"stdout","time":33357.698841121,"data":"seed 1 R 0.3046 {'1': 1.0, '2': 0.9988, '3': 0.2808, '4': 0.2992, '5': 0.31, '6': 0.355, '7': 0.3452} (33322s)\n"}
+,{"stream_name":"stdout","time":34683.361117917,"data":"seed 1 O 0.402 {'1': 0.2792, '2': 0.3242, '3': 0.3728, '4': 0.3908, '5': 0.4132, '6': 0.458, '7': 0.451} (34647s)\n"}
+,{"stream_name":"stdout","time":37453.46829381,"data":"seed 1 Wm 0.3749 {'1': 0.9996, '2': 0.9974, '3': 0.9824, '4': 0.3856, '5': 0.3642, '6': 0.3834, '7': 0.3882} (37418s)\n"}
+,{"stream_name":"stdout","time":38719.48814707,"data":"seed 2 A 0.4012 {'1': 0.2764, '2': 0.328, '3': 0.3858, '4': 0.3966, '5': 0.4058, '6': 0.46, '7': 0.4512} (38684s)\n"}
+,{"stream_name":"stdout","time":41321.685906276,"data":"seed 2 K 0.4032 {'1': 0.276, '2': 0.3296, '3': 0.3828, '4': 0.3966, '5': 0.4098, '6': 0.4526, '7': 0.4472} (41286s)\n"}
+,{"stream_name":"stderr","time":41327.754032684,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":41327.754062117,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":41328.023890596,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":41328.023927677,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":41328.842252442,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":41330.028881466,"data":"[NbConvertApp] Writing 401410 bytes to __results__.html\n"}
+]
