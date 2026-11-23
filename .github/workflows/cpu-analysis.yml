@@ -1,0 +1,28 @@
+# Free CPU analysis jobs (no GPU). Runs analysis/<name>/run.py on push; results uploaded as an artifact.
+name: CPU analysis
+on:
+  push:
+    branches: [main]
+    paths: ["analysis/**"]
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: |
+          pip install -q torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -q transformers numpy requests
+      - run: |
+          for d in analysis/*/; do (cd $d && python -u run.py 2>&1 | grep -v -i warn | tee run.log); done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results
+          path: |
+            analysis/*/*.json
+            analysis/*/run.log
