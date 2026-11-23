@@ -1,0 +1,23 @@
+[{"stream_name":"stdout","time":111.760109098,"data":"pool (2000000, 51) (77s)\n"}
+,{"stream_name":"stdout","time":128.687374984,"data":"gates {'L2': {'d2': 0.963, 'd3': 0.243, 'd4': 0.237, 'all': 0.593, 'shuffled': 0.122, 'random_init': 0.514}, 'L5': {'d2': 1.0, 'd3': 0.936, 'd4': 0.418, 'all': 0.835, 'shuffled': 0.128, 'random_init': 0.505}, 'L7': {'d2': 1.0, 'd3': 0.995, 'd4': 0.957, 'all': 0.984, 'shuffled': 0.124, 'random_init': 0.521}, 'pass_A': True, 'pass_B': True}\n"}
+,{"stream_name":"stderr","time":132.554053858,"data":"/kaggle/src/script.py:314: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.\n"}
+,{"stream_name":"stderr","time":132.554089898,"data":"  scaler = torch.cuda.amp.GradScaler(enabled=dev == \"cuda\")\n"}
+,{"stream_name":"stderr","time":255.926227582,"data":"/kaggle/src/script.py:359: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\n"}
+,{"stream_name":"stderr","time":255.926284978,"data":"Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n"}
+,{"stream_name":"stderr","time":255.926291312,"data":"  curve.append({\"step\": step + 1, \"stage\": Dd, \"acc\": acc, \"loss\": round(loss.item(), 4), \"aux\": round(float(aux), 4)})\n"}
+,{"stream_name":"stdout","time":1437.17534858,"data":"seed 1 W1 0.4043 {'1': 1.0, '2': 0.4004, '3': 0.401, '4': 0.4018, '5': 0.4068, '6': 0.454, '7': 0.467} (1403s)\n"}
+,{"stream_name":"stdout","time":2746.981980863,"data":"seed 2 W1 0.46 {'1': 1.0, '2': 0.41, '3': 0.4274, '4': 0.4414, '5': 0.4786, '6': 0.5294, '7': 0.5304} (2712s)\n"}
+,{"stream_name":"stdout","time":4055.225165527,"data":"seed 3 W1 0.4203 {'1': 1.0, '2': 0.9982, '3': 0.8542, '4': 0.4014, '5': 0.4392, '6': 0.4694, '7': 0.4926} (4021s)\n"}
+,{"stream_name":"stdout","time":5365.096426805,"data":"seed 4 W1 0.4614 {'1': 1.0, '2': 0.4188, '3': 0.421, '4': 0.4486, '5': 0.4742, '6': 0.5088, '7': 0.535} (5330s)\n"}
+,{"stream_name":"stdout","time":6673.85167682,"data":"seed 5 W1 0.4619 {'1': 1.0, '2': 0.4224, '3': 0.4204, '4': 0.4468, '5': 0.477, '6': 0.5178, '7': 0.5338} (6639s)\n"}
+,{"stream_name":"stdout","time":9276.054904121,"data":"seed 4 W 0.9906 {'1': 0.9998, '2': 0.9996, '3': 0.999, '4': 0.994, '5': 0.9872, '6': 0.8856, '7': 0.718} (9241s)\n"}
+,{"stream_name":"stdout","time":11876.131947139,"data":"seed 5 W 0.9943 {'1': 1.0, '2': 0.9998, '3': 0.9978, '4': 0.995, '5': 0.9936, '6': 0.9302, '7': 0.7656} (11841s)\n"}
+,{"stream_name":"stdout","time":13118.139699004,"data":"seed 4 A 0.2383 {'1': 0.9998, '2': 0.2006, '3': 0.23, '4': 0.2348, '5': 0.2418, '6': 0.243, '7': 0.2428} (13083s)\n"}
+,{"stream_name":"stdout","time":14359.900493452,"data":"seed 5 A 0.402 {'1': 0.2836, '2': 0.3234, '3': 0.3766, '4': 0.388, '5': 0.416, '6': 0.4544, '7': 0.4542} (14325s)\n"}
+,{"stream_name":"stderr","time":14365.741044475,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":14365.741079624,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":14365.995294722,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":14365.995334617,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":14366.851742671,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":14368.002180279,"data":"[NbConvertApp] Writing 404274 bytes to __results__.html\n"}
+]
