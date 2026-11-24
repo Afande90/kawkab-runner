@@ -228,6 +228,9 @@ def main():
         print("ridge", name, rr[name], flush=True)
         del m, mr
     OUT["sec"] = round(time.time() - T0); save()
+    print("GEOMETRY", json.dumps(OUT["geometry_vs_big"]), flush=True)
+    for n_, r_ in OUT["models"].items():
+        print("PERLAYER", n_, json.dumps([[x["layer"], round(x["auc_jlens"] or 0, 4), round(x["auc_logit"] or 0, 4)] for x in r_["per_layer"]]), flush=True)
 
 
 if __name__ == "__main__":
