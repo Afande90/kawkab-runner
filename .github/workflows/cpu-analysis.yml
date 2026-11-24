@@ -18,7 +18,7 @@ jobs:
           pip install -q torch --index-url https://download.pytorch.org/whl/cpu
           pip install -q transformers numpy requests
       - run: |
-          for d in analysis/*/; do (cd $d && python -u run.py 2>&1 | grep -v -i warn | tee run.log); done
+          for n in $(cat analysis/ACTIVE); do d=analysis/$n; (cd $d && python -u run.py 2>&1 | grep -v -i warn | tee run.log); done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
