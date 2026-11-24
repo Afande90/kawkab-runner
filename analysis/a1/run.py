@@ -46,7 +46,7 @@ def load(name, random_init=False):
         cfg = GPTNeoXConfig.from_pretrained("EleutherAI/" + name)
         torch.manual_seed(9)
         return GPTNeoXForCausalLM(cfg).eval()
-    return AutoModelForCausalLM.from_pretrained("EleutherAI/" + name, torch_dtype=torch.float32).eval()
+    return AutoModelForCausalLM.from_pretrained("EleutherAI/" + name, dtype=torch.float32).eval()
 
 
 def concepts(toks, tok):
@@ -80,9 +80,10 @@ def fit_jlens(model, fit, cids):
     hooks.append(model.get_input_embeddings().register_forward_hook(lambda m, a, o: o.detach().requires_grad_(True)))
     valid = torch.zeros(SEQ, dtype=torch.bool); valid[8:SEQ - 1] = True
     U = torch.zeros(L - 1, len(cids), W.shape[1])
+    chunk = CHUNK if W.shape[1] < 1024 else max(4, CHUNK // 8)      # 410m ran out of memory at 64 (run 45292404797)
     for ids in fit:
-        for b in range(0, len(cids), CHUNK):
-            ch = cids[b:b + CHUNK]; acts.clear()
+        for b in range(0, len(cids), chunk):
+            ch = cids[b:b + chunk]; acts.clear()
             model(input_ids=ids[None].repeat(len(ch), 1), use_cache=False)
             cot = torch.zeros_like(acts[L - 1]); cot[:, valid] = W[ch][:, None, :]
             gs = torch.autograd.grad(acts[L - 1], [acts[i] for i in range(L - 1)], grad_outputs=cot, allow_unused=True)
@@ -168,7 +169,7 @@ def main():
             h1 = blk.attention.dense.register_forward_pre_hook(lambda mod, a: got.__setitem__("att", a[0].detach()))
             h2 = blk.mlp.register_forward_hook(lambda mod, a, o: got.__setitem__("mlp", o.detach()))
             with torch.no_grad():
-                m(input_ids=ev[:16], use_cache=False)
+                m(input_ids=ev[:8], use_cache=False)
             h1.remove(); h2.remove()
             Wd = blk.attention.dense.weight.detach(); dh = d // nh
             for hi in range(nh):
