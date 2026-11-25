@@ -1,0 +1,9 @@
+import hashlib,platform
+import numpy,torch,transformers
+print("sha256 =",hashlib.sha256(b"kawkab-check-7319").hexdigest())
+print("numpy_mean =",format(numpy.random.default_rng(7319).standard_normal(1000).mean(),".6f"))
+print("Python =",platform.python_version())
+print("torch =",torch.__version__)
+print("transformers =",transformers.__version__)
+print("numpy =",numpy.__version__)
+print("torch.cuda.is_available() =",torch.cuda.is_available())
